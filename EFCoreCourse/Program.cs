@@ -595,8 +595,27 @@ namespace EFCoreCourse
 
             #endregion
 
+            #region Local And Find() 
+            //// 1) Load ALL employees into the DbContext's memory (Change Tracker)
+            //await dbContext.Employees.LoadAsync();
+
+            //// 2) Read from memory only — no database call
+            //foreach (var employee in dbContext.Employees.Local)
+            //{
+            //    Console.WriteLine(employee.EmpName);
+            //}
+
+            //// 3) FirstOrDefaultAsync → ALWAYS sends a query to the database,
+            ////    even if the employee is already loaded in memory
+            //var emp = await dbContext.Employees.FirstOrDefaultAsync(e => e.EmpId == 20);
+            ////
+            //// 4) FindAsync → checks memory (Local) first by Primary Key;
+            ////    queries the database ONLY if not found
+            //emp = await dbContext.Employees.FindAsync(20);
+
             #endregion
 
+            #endregion
 
         }
     }
