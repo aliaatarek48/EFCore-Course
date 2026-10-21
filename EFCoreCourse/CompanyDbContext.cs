@@ -14,6 +14,8 @@ namespace EFCoreCourse
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server = .; Database = CompanyDb; Trusted_Connection = true; TrustServerCertificate =true");
+            //optionsBuilder.UseLazyLoadingProxies(x => x.IgnoreNonVirtualNavigations());
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

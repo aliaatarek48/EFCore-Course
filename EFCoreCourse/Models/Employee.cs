@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace EFCoreCourse.Models
 {
     internal class Employee
@@ -32,7 +34,7 @@ namespace EFCoreCourse.Models
         //Navigation Property [One]
         // Each Employee Must Be Work In One Department
         [InverseProperty(nameof(Department.Employees))]
-        public Department EmployeeDepartment { get; set; } = null!;
+        public virtual Department EmployeeDepartment { get; set; } = null!;
 
         //[ForeignKey(nameof(EmployeeDepartment))]
         public int DepartmentId { get; set; }
