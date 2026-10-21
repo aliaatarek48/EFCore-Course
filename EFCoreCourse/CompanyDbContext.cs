@@ -75,6 +75,7 @@ namespace EFCoreCourse
 
         #region DbContexts
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
         #endregion
     }
 }

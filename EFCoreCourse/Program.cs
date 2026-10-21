@@ -1,113 +1,153 @@
-﻿namespace EFCoreCourse
+﻿using EFCoreCourse.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace EFCoreCourse
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            #region CRUD Operations - Query Object Model
-            //using CompanyDbContext dbContext = new CompanyDbContext();
+            using CompanyDbContext dbContext = new CompanyDbContext();
 
-            //Employee employee = new Employee()
+            #region CRUD Operations - Query Object Model
+
+            //Department department01 = new Department()
             //{
-            //    EmpName = "Omar",
-            //    Age = 25,
-            //    Email = "OmarTarek@gmail.com",
-            //    Password = "P@ssw0rd",
-            //    PhoneNumber = "012345678",
-            //    Salary = 6000
+            //    DeptName = "IT"
             //};
             //dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-            //Console.WriteLine(dbContext.Entry(employee).State); // Detached
-            //Console.WriteLine(employee.EmpId); // 0
+            //Console.WriteLine(dbContext.Entry(department01).State); // Detached
+            //Console.WriteLine(department01.DeptId); // 0
 
-            #region Add New Row In Table Employees In Database
-            //dbContext.Employees.Add(employee);
-            ////dbContext.Set<Employee>().Add(employee);
-            ////dbContext.Add(employee);
-            ////dbContext.Entry(employee).State = EntityState.Added;
+            #region Add New Row In Table Departments In Database
+            //dbContext.Departments.Add(department01);
+            ////dbContext.Set<Department>().Add(department01);
+            ////dbContext.Add(department01);
+            ////dbContext.Entry(department01).State = EntityState.Added;
             //Console.WriteLine("After Adding In DbSet ");
-            //Console.WriteLine(dbContext.Entry(employee).State); // Added
-            //Console.WriteLine($"Emp01 Id : {employee.EmpId}"); // 0
+            //Console.WriteLine(dbContext.Entry(department01).State); // Added
+            //Console.WriteLine($"department01 Id : {department01.DeptId}"); // 0
             //dbContext.SaveChanges();
             //Console.WriteLine("After Save Changes");
-            //Console.WriteLine(dbContext.Entry(employee).State); // UnChanged
-            //Console.WriteLine($"Emp01 Id : {employee.EmpId}"); // 20
+            //Console.WriteLine(dbContext.Entry(department01).State); // UnChanged
+            //Console.WriteLine($"department01 Id : {department01.DeptId}"); // 20
 
             #endregion
 
             #region Retrieve Data From Database 
-            ////dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-            //var employee01 = dbContext.Set<Employee>().AsNoTracking().FirstOrDefault(E => E.EmpName == "Omar");
-            //if (employee01 is not null)
+            //var department = dbContext.Set<Department>().AsNoTracking().FirstOrDefault(E => E.DeptName == "IT");
+            //if (department is not null)
             //{
-            //	Console.WriteLine(dbContext.Entry(employee01).State);// Detached
-            //	Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}");
+            //    Console.WriteLine(dbContext.Entry(department).State);// Detached
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}");
             //}
 
-            //var employee02 = dbContext.Employees.FirstOrDefault(E => E.EmpName == "Aliaa");
 
-            //if (employee02 is not null)
+            //department = dbContext.Departments.FirstOrDefault(E => E.DeptName == "IT");
+
+            //if (department is not null)
             //{
-            //	Console.WriteLine(dbContext.Entry(employee02).State);// UnChanged
-            //	Console.WriteLine($"{employee02.EmpId} - {employee02.EmpName} - {employee02.Email}");
+            //    Console.WriteLine(dbContext.Entry(department).State);// UnChanged
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}");
             //}
 
             #endregion
 
             #region Modify Data In Database 
 
-            //var employee01 = dbContext.Employees.AsNoTracking().FirstOrDefault(E => E.EmpId == 20);
-            //if (employee01 is not null)
+            #region Connected scenario
+
+            //var department = dbContext.Departments.FirstOrDefault(E => E.DeptId == 10);
+            //if (department is not null)
             //{
-            //    Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Detached
-            //    Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 20 - Omar - Omar@gmail.com
-            //    employee01.EmpName = "Ahmed";
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Unchanged
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - IT
+            //    department.DeptName = "Sales";
 
             //    Console.WriteLine("After Changing Name ");
-            //    Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Detached
-            //    Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 10 - Ahmed - Aliaatarek@gmail.com
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Modified
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - Sales
             //    dbContext.SaveChanges();
             //    Console.WriteLine("After SaveChanges()");
-            //    Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Detached
-            //    Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 10 - Ahmed - Aliaatarek@gmail.com
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Unchanged
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - Sales
             //}
+
+            #endregion
+
+            #region Disconnected scenario
+
+            //var department = new Department() { DeptId = 10, DeptName = "HR", DateOfCreation = new DateTime(2026, 10, 21) };
+            //Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Detached
+            //dbContext.Update(department);
+            //Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Modified
+            //dbContext.SaveChanges();
+            //Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Unchanged
+            #endregion
+
+            #region AsNoTracking 
+            //var department = dbContext.Departments.AsNoTracking().FirstOrDefault(E => E.DeptId == 10);
+            //if (department is not null)
+            //{
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Detached
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - Sales
+            //    department.DeptName = "IT";
+
+            //    Console.WriteLine("After Changing Name ");
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Detached
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - IT
+            //    dbContext.SaveChanges();
+            //    Console.WriteLine("After SaveChanges()");
+            //    Console.WriteLine($"Department State = {dbContext.Entry(department).State}"); // Detached
+            //    Console.WriteLine($"{department.DeptId} - {department.DeptName}"); // 10 - IT
+            //    // Object -> DeptName Changed , InDatabase Nothing happened
+            //}
+            #endregion
 
             #endregion
 
             #region Remove Data from Database 
 
-            //var employee01 = dbContext.Employees.FirstOrDefault(E => E.EmpId == 20);
-            //if(employee01 is not null)
+            #region Connected scenario
+            //var department = dbContext.Departments.FirstOrDefault(E => E.DeptId == 10);
+            //if (department is not null)
             //{
-            //	Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Unchanged
-            //	Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 20 - Omar - Omar@gmail.com
+            //    Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Unchanged
 
 
-            //	dbContext.Employees.Remove(employee01);
-            //	//dbContext.Set<Employee>().Remove(employee01);
-            //	//dbContext.Remove(employee01);
-            //	//dbContext.Entry(employee01).State = EntityState.Deleted;
+            //    dbContext.Departments.Remove(department);
+            //    //dbContext.Set<Department>().Remove(department);
+            //    //dbContext.Remove(department);
+            //    //dbContext.Entry(department).State = EntityState.Deleted;
 
 
-            //	Console.WriteLine("After Removing Employee01 From Dbset");
-            //	Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Deleted
-            //	Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 20 - Omar - Omar@gmail.com
+            //    Console.WriteLine("After Removing department From Dbset");
+            //    Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Deleted
 
-            //	dbContext.SaveChanges();
-            //	Console.WriteLine("After SaveChanges()");
-            //	Console.WriteLine($"Employee01 State = {dbContext.Entry(employee01).State}"); // Detached
-            //	Console.WriteLine($"{employee01.EmpId} - {employee01.EmpName} - {employee01.Email}"); // 20 - Omar - Omar@gmail.com
+            //    dbContext.SaveChanges();
+            //    Console.WriteLine("After SaveChanges()");
+            //    Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Detached
+            //} 
+            #endregion
 
-
-            //}
+            #region Disconnected scenario
+            //var department = new Department() { DeptId = 40 };
+            //Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Detached
+            //dbContext.Remove(department);
+            //Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Deleted
+            //dbContext.SaveChanges();
+            //Console.WriteLine($"department State = {dbContext.Entry(department).State}"); // Detached 
+            #endregion
 
             #endregion
 
             #region Bulk Operations
+            // insert data into Employees Table 
 
-            ////var employees = dbContext.Employees.Where(e => e.Salary >= 5000).ToList();
+            //var employees = dbContext.Employees.Where(e => e.Salary >= 5000).ToList();
+
             ////foreach (var employee in employees)
             ////{
             ////    employee.Salary *= 1.2m;
@@ -123,30 +163,32 @@
 
             #region Data Seeding 
 
-            //if (!dbContext.Set<Customer>().Any())
+            //if (!dbContext.Set<Project>().Any())
             //{
-            //    dbContext.Set<Customer>().AddRange(
-            //        new Customer { Name = "Ahmed Mohamed" },
-            //        new Customer { Name = "Salma Osama" },
-            //        new Customer { Name = "Mariam Ahmed" }
+            //    dbContext.Set<Project>().AddRange(
+            //        new Project { PName = "P01" },
+            //        new Project { PName = "P02" },
+            //        new Project { PName = "P03" }
             //    );
 
             //    //// Data From File
-            //    //List<Customer> Customers = new()
-            //    //{
-            //    //    new Customer { Name = "Ahmed Mohamed" },
-            //    //    new Customer { Name = "Salma Osama" },
-            //    //    new Customer { Name = "Mariam Ahmed" }
-            //    //};
+            //    List<Project> Customers =
+            //    [
+            //        new Project { PName = "P01" },
+            //        new Project { PName = "P02" },
+            //        new Project { PName = "P03" }
+            //    ];
 
-            //    //dbContext.AddRange(Customers);
+            //    dbContext.AddRange(Customers);
 
             //    dbContext.SaveChanges();
 
-            //    Console.WriteLine("Customers Data Seeded");
+            //    Console.WriteLine("Project Data Seeded");
             //}
 
             #endregion
+
+
         }
     }
 }

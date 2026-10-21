@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCoreCourse.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20261021133352_DepartmentDataSeeding")]
-    partial class DepartmentDataSeeding
+    [Migration("20261021153728_DepartmentTableDataSeeding")]
+    partial class DepartmentTableDataSeeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

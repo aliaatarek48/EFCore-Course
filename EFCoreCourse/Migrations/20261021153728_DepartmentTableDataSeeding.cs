@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EFCoreCourse.Migrations
 {
     /// <inheritdoc />
-    public partial class DepartmentDataSeeding : Migration
+    public partial class DepartmentTableDataSeeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
