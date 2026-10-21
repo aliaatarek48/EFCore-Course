@@ -69,6 +69,7 @@ namespace EFCoreCourse
             modelBuilder.ApplyConfiguration<Department>(new DepartmentConfig());
             modelBuilder.ApplyConfiguration<Employee>(new EmployeeConfig());
             modelBuilder.ApplyConfiguration<EmployeeProject>(new EmployeeProjectConfig());
+            modelBuilder.ApplyConfiguration<StudentCourse>(new StudentCourseConfig());
 
         }
 

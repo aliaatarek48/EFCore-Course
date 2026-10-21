@@ -45,6 +45,13 @@ namespace EFCoreCourse.Configurations
                    .IsRequired() // Make Relation Required [FK Not Allow NULL]
                    .OnDelete(DeleteBehavior.Restrict);
             #endregion
+
+            #region Supervise Relationship
+
+            builder.HasOne(e => e.Supervisor)
+                   .WithMany()
+                   .HasForeignKey(e => e.SupervisorId);
+            #endregion
         }
     }
 }

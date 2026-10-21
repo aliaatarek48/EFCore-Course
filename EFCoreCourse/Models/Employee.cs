@@ -43,5 +43,10 @@ namespace EFCoreCourse.Models
         [InverseProperty(nameof(EmployeeProject.Employee))]
         public EmployeeProject? EmployeeProject { get; set; }
         #endregion
+
+        #region Supervise Relationship 
+        public int? SupervisorId { get; set; }
+        public Employee? Supervisor { get; set; }
+        #endregion
     }
 }

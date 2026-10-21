@@ -23,6 +23,22 @@ namespace EFCoreCourse.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EFCoreCourse.Models.Course", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
+
+                    b.Property<string>("CName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CourseId");
+
+                    b.ToTable("Course");
+                });
+
             modelBuilder.Entity("EFCoreCourse.Models.Department", b =>
                 {
                     b.Property<int>("DeptId")
@@ -53,6 +69,26 @@ namespace EFCoreCourse.Migrations
                         .HasFilter("[DeptManagerId] IS NOT NULL");
 
                     b.ToTable("Departments", "Sales");
+
+                    b.HasData(
+                        new
+                        {
+                            DeptId = 1,
+                            DateOfCreation = new DateTime(2026, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeptName = "IT"
+                        },
+                        new
+                        {
+                            DeptId = 2,
+                            DateOfCreation = new DateTime(2026, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeptName = "Sales"
+                        },
+                        new
+                        {
+                            DeptId = 3,
+                            DateOfCreation = new DateTime(2026, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeptName = "HR"
+                        });
                 });
 
             modelBuilder.Entity("EFCoreCourse.Models.Employee", b =>
@@ -94,6 +130,9 @@ namespace EFCoreCourse.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<int?>("SupervisorId")
+                        .HasColumnType("int");
+
                     b.ComplexProperty<Dictionary<string, object>>("EmpAddress", "EFCoreCourse.Models.Employee.EmpAddress#Address", b1 =>
                         {
                             b1.IsRequired();
@@ -112,12 +151,80 @@ namespace EFCoreCourse.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("SupervisorId");
+
                     b.ToTable("EmployeesTable", null, t =>
                         {
                             t.HasCheckConstraint("Check_Employee_Age_Range", "[Age] Between 22 And 40");
 
                             t.HasCheckConstraint("Check_Employee_Email", "[Email] Like '%@%.%'");
                         });
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.EmployeeProject", b =>
+                {
+                    b.Property<int>("EmpId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmpId");
+
+                    b.HasIndex("ProId");
+
+                    b.ToTable("EmployeeProject");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Project");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.Student", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+
+                    b.Property<string>("SName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StudentId");
+
+                    b.ToTable("Student");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.StudentCourse", b =>
+                {
+                    b.Property<int>("StdId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CrsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
+
+                    b.HasKey("StdId", "CrsId");
+
+                    b.HasIndex("CrsId");
+
+                    b.ToTable("StudentCourse");
                 });
 
             modelBuilder.Entity("EFCoreCourse.Models.Department", b =>
@@ -138,7 +245,56 @@ namespace EFCoreCourse.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("EFCoreCourse.Models.Employee", "Supervisor")
+                        .WithMany()
+                        .HasForeignKey("SupervisorId");
+
                     b.Navigation("EmployeeDepartment");
+
+                    b.Navigation("Supervisor");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.EmployeeProject", b =>
+                {
+                    b.HasOne("EFCoreCourse.Models.Employee", "Employee")
+                        .WithOne("EmployeeProject")
+                        .HasForeignKey("EFCoreCourse.Models.EmployeeProject", "EmpId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EFCoreCourse.Models.Project", "Project")
+                        .WithMany("ProjectEmployees")
+                        .HasForeignKey("ProId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.StudentCourse", b =>
+                {
+                    b.HasOne("EFCoreCourse.Models.Course", "Course")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CrsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EFCoreCourse.Models.Student", "Student")
+                        .WithMany("StdCourse")
+                        .HasForeignKey("StdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.Course", b =>
+                {
+                    b.Navigation("StudentCourses");
                 });
 
             modelBuilder.Entity("EFCoreCourse.Models.Department", b =>
@@ -148,7 +304,19 @@ namespace EFCoreCourse.Migrations
 
             modelBuilder.Entity("EFCoreCourse.Models.Employee", b =>
                 {
+                    b.Navigation("EmployeeProject");
+
                     b.Navigation("ManagedDepartment");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.Project", b =>
+                {
+                    b.Navigation("ProjectEmployees");
+                });
+
+            modelBuilder.Entity("EFCoreCourse.Models.Student", b =>
+                {
+                    b.Navigation("StdCourse");
                 });
 #pragma warning restore 612, 618
         }

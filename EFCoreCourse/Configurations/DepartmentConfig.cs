@@ -40,6 +40,17 @@ namespace EFCoreCourse.Configurations
 
             #endregion
 
+            #region Data Seeding 
+
+
+            D.HasData(
+                new Department() { DeptId = 1, DeptName = "IT", DateOfCreation = new DateTime(2026, 10, 1) },
+                new Department() { DeptId = 2, DeptName = "Sales", DateOfCreation = new DateTime(2026, 05, 15) },
+                new Department() { DeptId = 3, DeptName = "HR", DateOfCreation = new DateTime(2026, 02, 20) }
+                );
+
+            #endregion
+
         }
     }
 }
